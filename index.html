@@ -1,0 +1,89 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>webGL　テスト</title>
+<style>
+html, body, div, span, object, iframe, h1, h2, h3, h4, h5, h6, p, blockquote, pre, abbr, address, cite, code, del, dfn, em, img, ins, kbd, q, samp, small, strong, sub, sup, var, b, i, dl, dt, dd, ol, ul, li, fieldset, form, label, legend, table, caption, tbody, tfoot, thead, tr, th, td, article, aside, canvas, details, figcaption, figure,  footer, header, hgroup, menu, nav, section, summary, time, mark, audio, video { margin:0; padding:0; border:0; outline:0; font-size:100%; vertical-align:baseline; background:transparent; }  body { line-height:1; }  article,aside,details,figcaption,figure, footer,header,hgroup,menu,nav,section {  display:block; }  nav ul { list-style:none; }  blockquote, q { quotes:none; }  blockquote:before, blockquote:after, q:before, q:after { content:''; content:none; }  a { margin:0; padding:0; font-size:100%; vertical-align:baseline; background:transparent; }  / change colours to suit your needs / ins { background-color:#ff9; color:#000; text-decoration:none; }  / change colours to suit your needs / mark { background-color:#ff9; color:#000;  font-style:italic; font-weight:bold; }  del { text-decoration: line-through; }  abbr[title], dfn[title] { border-bottom:1px dotted; cursor:help; }  table { border-collapse:collapse; border-spacing:0; }  /* change border colour to suit your needs  */ hr { display:block; height:1px; border:0;  border-top:1px solid #cccccc; margin:1em 0; padding:0; }  input, select { vertical-align:middle; } 
+/*ページスタイル*/
+p{width:500px;text-align: center; margin:10px auto 15px; padding:20px; font-size:25px; font-family: "ヒラギノ角ゴ Pro W3", "Hiragino Kaku Gothic Pro", "メイリオ", Meiryo, Osaka, "ＭＳ Ｐゴシック", "MS PGothic", "sans-serif";}
+</style>
+</head>
+
+<body>
+<p>webGLテスト</p>
+<div id="stage"></div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r79/three.min.js"></script>
+<script type="text/javascript">
+	(function() {
+	//宣言
+    var scene;
+    var sphere;
+    var camera;
+	var gridHelper;
+	var axisHelper;
+    var light;
+	var ambient;
+    var renderer;
+    var width = window.outerWidth;
+    var height = 800;
+
+    // scene ステージ
+    scene = new THREE.Scene();
+	
+	//テクスチャ追加
+	loader = new THREE.TextureLoader();
+    loader.load('/Users/web_21x/Desktop/検証/webGL/fujiyama.jpg', function(texture) {
+      sphere(texture);
+      render();
+    });
+
+    // mesh 物体生成
+    function sphere(texture){
+		
+    sphereFuji = new THREE.Mesh(
+    new THREE.CylinderGeometry(15, 200, 150, 18, 5, false), // geometry 形状
+    new THREE.MeshLambertMaterial({ // 材質         
+          map: texture
+        })
+      );
+    sphereFuji.position.set(0, 50, 0);//位置
+    scene.add(sphereFuji);//シーンに追加
+	};
+		
+	//ヘルパー
+	gridHelper = new THREE.GridHelper(500, 40); // グリッド
+    scene.add(gridHelper);
+	axisHelper = new THREE.AxisHelper(500); // x,y,zのガイド表示
+    scene.add(axisHelper);
+
+    // light
+    light = new THREE.DirectionalLight(0xffffff, 1);//光源
+    light.position.set(0, 80, 20);
+    scene.add(light);
+	
+	ambient = new THREE.AmbientLight(0x222222);//グレア
+    scene.add(ambient);
+
+    // camera
+    camera = new THREE.PerspectiveCamera(50, width / height, 1, 800);//カメラ位置
+    camera.position.set(200, 100, 300);
+    camera.lookAt(scene.position);
+
+    // 描画　レンダリング
+    renderer = new THREE.WebGLRenderer({ antialias: true });
+    renderer.setSize(width, height);
+    renderer.setClearColor(0xeeeeee);
+    document.getElementById('stage').appendChild(renderer.domElement);
+    renderer.render(scene, camera);
+	/*function render() {
+      requestAnimationFrame(render);
+       
+      sphereEarth.rotation.x += 0.01; // 追加
+      renderer.render(scene, camera);
+    }*/
+ })();
+	
+</script>
+</body>
+</html>
